@@ -1,0 +1,76 @@
+# ============================================
+# Dependências
+# ============================================
+node_modules/
+**/node_modules/
+
+# ============================================
+# Variáveis de ambiente — NUNCA commitar .env
+# ============================================
+.env
+.env.*
+!.env.example
+
+# ============================================
+# Builds / artefatos gerados
+# ============================================
+dist/
+build/
+**/dist/
+**/build/
+
+# ============================================
+# Prisma — NÃO ignore migrations!
+# ============================================
+# (deixe prisma/migrations/ versionado, é requisito do trabalho)
+# Ignora só o client gerado automaticamente
+**/node_modules/.prisma/
+**/node_modules/@prisma/client/
+
+# ============================================
+# Logs
+# ============================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+**/logs/
+
+# ============================================
+# Testes / cobertura
+# ============================================
+coverage/
+.nyc_output/
+
+# ============================================
+# Sistema operacional
+# ============================================
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# ============================================
+# IDEs / editores
+# ============================================
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+
+# ============================================
+# Docker
+# ============================================
+docker-compose.override.yml
+.docker/
+
+# ============================================
+# Node/NPM específicos
+# ============================================
+.npm/
+.cache/
+.eslintcache
+.nvmrc

@@ -1,0 +1,20 @@
+import { PrismaUserRepository } from '../persistence/repositories/PrismaUserRepository.js';
+import { PrismaProjectRepository } from '../persistence/repositories/PrismaProjectRepository.js';
+import { PrismaCardRepository } from '../persistence/repositories/PrismaCardRepository.js';
+import { PrismaCommentRepository } from '../persistence/repositories/PrismaCommentRepository.js';
+import { PrismaHistoryRepository } from '../persistence/repositories/PrismaHistoryRepository.js';
+import { UserService } from '../application/services/UserService.js';
+import { ProjectService } from '../application/services/ProjectService.js';
+import { CardService } from '../application/services/CardService.js';
+import { CommentService } from '../application/services/CommentService.js';
+
+const userRepo = new PrismaUserRepository();
+const projectRepo = new PrismaProjectRepository();
+const cardRepo = new PrismaCardRepository();
+const commentRepo = new PrismaCommentRepository();
+const historyRepo = new PrismaHistoryRepository();
+
+export const userService = new UserService(userRepo);
+export const projectService = new ProjectService(projectRepo);
+export const cardService = new CardService(cardRepo, historyRepo);
+export const commentService = new CommentService(commentRepo, cardRepo, historyRepo);

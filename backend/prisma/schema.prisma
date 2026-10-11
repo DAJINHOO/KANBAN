@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+
+  memberships ProjectMember[]
+  cards       Card[]          @relation("CardAssignee")
+  comments    Comment[]
+  history     CardHistory[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  columns Column[]
+  cards   Card[]
+  members ProjectMember[]
+}
+
+model ProjectMember {
+  id        String   @id @default(uuid())
+  projectId String
+  userId    String
+  role      String   @default("MEMBER")
+  joinedAt  DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+}
+
+model Column {
+  id        String @id @default(uuid())
+  name      String
+  position  Int
+  projectId String
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  cards   Card[]
+
+  @@index([projectId, position])
+}
+
+model Card {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  position    Int
+  columnId    String
+  projectId   String
+  assigneeId  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  column   Column        @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  project  Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee User?         @relation("CardAssignee", fields: [assigneeId], references: [id])
+  comments Comment[]
+  history  CardHistory[]
+
+  @@index([columnId, position])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  cardId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
+
+model CardHistory {
+  id        String   @id @default(uuid())
+  cardId    String
+  userId    String
+  action    String   // CREATED, MOVED, UPDATED, COMMENTED
+  details   String?
+  createdAt DateTime @default(now())
+
+  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+}
