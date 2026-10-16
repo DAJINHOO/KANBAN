@@ -12,6 +12,31 @@ export class PrismaCardRepository extends ICardRepository {
   async findByProject(projectId) {
     return prisma.card.findMany({ where: { projectId }, orderBy: { position: 'asc' } });
   }
+  async findAll({ page = 1, limit = 10, filter = {} } = {}) {
+  const where = {};
+  if (filter.projectId) where.projectId = filter.projectId;
+  if (filter.columnId) where.columnId = filter.columnId;
+  if (filter.assigneeId) where.assigneeId = filter.assigneeId;
+  if (filter.title) {
+    where.title = { contains: filter.title, mode: 'insensitive' };
+  }
+
+  const [data, total] = await Promise.all([
+    prisma.card.findMany({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: [{ columnId: 'asc' }, { position: 'asc' }],
+      include: {
+        assignee: { select: { id: true, name: true } },
+        _count: { select: { comments: true } },
+      },
+    }),
+    prisma.card.count({ where }),
+  ]);
+
+  return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
+}
   async update(id, data) { return prisma.card.update({ where: { id }, data }); }
   async delete(id) { return prisma.card.delete({ where: { id } }); }
 

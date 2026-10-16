@@ -3,7 +3,19 @@ import { IProjectRepository } from '../../domain/repositories/IProjectRepository
 import { prisma } from '../prisma.js';
 
 export class PrismaProjectRepository extends IProjectRepository {
-  async create(data) { return prisma.project.create({ data }); }
+  async create(data) {
+  const { ownerId, ...projectData } = data;
+
+  return prisma.project.create({
+    data: {
+      ...projectData,
+      members: ownerId
+        ? { create: { userId: ownerId, role: 'OWNER' } }
+        : undefined,
+    },
+    include: { columns: { orderBy: { position: 'asc' } } },
+  });
+}
   async findById(id) {
     return prisma.project.findUnique({ where: { id }, include: { members: { include: { user: true } } } });
   }

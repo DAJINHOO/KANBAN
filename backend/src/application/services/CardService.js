@@ -22,4 +22,11 @@ export class CardService {
   }
   async getById(id) { return this.cardRepo.findById(id); }
   async listByProject(projectId) { return this.cardRepo.findByProject(projectId); }
+  async list({ page, limit, projectId, columnId, assigneeId, title } = {}) {
+  return this.cardRepo.findAll({
+    page,
+    limit,
+    filter: { projectId, columnId, assigneeId, title },
+  });
+}
 }

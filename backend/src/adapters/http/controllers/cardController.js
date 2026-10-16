@@ -13,6 +13,14 @@ const moveSchema = z.object({
   toPosition: z.number().int().min(0),
   userId: z.string().uuid(),
 });
+const listQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  projectId: z.string().uuid().optional(),
+  columnId: z.string().uuid().optional(),
+  assigneeId: z.string().uuid().optional(),
+  title: z.string().optional(),
+});
 const updateSchema = z.object({
   title: z.string().min(2).max(120).optional(),
   description: z.string().max(1000).optional(),
@@ -29,6 +37,14 @@ export function cardController(cardService, io) {
         res.status(201).json(card);
       } catch (e) { next(e); }
     },
+
+    list: async (req, res, next) => {
+    try {
+      const query = listQuerySchema.parse(req.query);
+      res.json(await cardService.list(query));
+    } catch (e) { next(e); }
+    },
+    
     update: async (req, res, next) => {
       try {
         const { userId, ...rest } = updateSchema.parse(req.body);

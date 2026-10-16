@@ -7,7 +7,7 @@ import { UserService } from '../application/services/UserService.js';
 import { ProjectService } from '../application/services/ProjectService.js';
 import { CardService } from '../application/services/CardService.js';
 import { CommentService } from '../application/services/CommentService.js';
-
+import { prisma } from '../persistence/prisma.js';
 const userRepo = new PrismaUserRepository();
 const projectRepo = new PrismaProjectRepository();
 const cardRepo = new PrismaCardRepository();
@@ -15,6 +15,6 @@ const commentRepo = new PrismaCommentRepository();
 const historyRepo = new PrismaHistoryRepository();
 
 export const userService = new UserService(userRepo);
-export const projectService = new ProjectService(projectRepo);
+export const projectService = new ProjectService(projectRepo, prisma);
 export const cardService = new CardService(cardRepo, historyRepo);
 export const commentService = new CommentService(commentRepo, cardRepo, historyRepo);
