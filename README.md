@@ -1,6 +1,3 @@
-cd ~/Documentos/"projeto node"/"PROJETO SALA DE AULA VIRUTAL KANBAN"/KANBAN
-
-cat > README.md <<'EOF'
 # Kanban Colaborativo Escolar
 
 Quadro Kanban colaborativo em tempo real. Alunos se identificam por nome, criam ou entram em quadros, movem cartões, comentam e veem as mudanças refletidas instantaneamente para todos os participantes conectados.
